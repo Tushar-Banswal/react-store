@@ -39,8 +39,14 @@ function App() {
   },[cartCleared]);
 
   useEffect(()=>{
-    addTotal();
-  }, [cart])
+    let subTotal = 0;
+    cart.forEach((item) => {
+      subTotal += item.total;
+    })
+    const tax = Math.round(subTotal * 0.001);
+    const total = subTotal + tax;
+    setPricing({total, subTotal, tax});
+  }, [cart]);
 
   const getItem = (id) => {
     return products.find(item => item.id === id);
@@ -115,19 +121,9 @@ function App() {
     setCartCleared((state) => (!state));
   }
 
-  const addTotal = () => {
-    let subTotal = 0;
-    cart.forEach((item) => {
-      subTotal += item.total;
-    })
-    const tax = Math.round(subTotal * 0.001);
-    const total = subTotal + tax;
-    setPricing({total, subTotal, tax});
-  }
-
   return (
     <ProductContext.Provider value={{storeProducts:products, detailProduct: productDetails, 
-    modalProduct, cart, handleDetails, addToCart, openModal, closeModal, increment, decrement, removeItem, pricing, clearCart, addTotal}}>
+    modalProduct, cart, handleDetails, addToCart, openModal, closeModal, increment, decrement, removeItem, pricing, clearCart}}>
       <div className='App'>
         <Navbar />
         <Routes>
